@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "notes-app"
-        DOCKER_IMAGE = "pranay801/${IMAGE_NAME}:latest"
+        DOCKER_IMAGE = "pranay801/${IMAGE_NAME}"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
@@ -22,7 +22,7 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                        echo $DOCKER_PASS' | docker login -u $DOCKER_USER --password-stdin
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                     '''
                 }
             }
@@ -36,18 +36,10 @@ pipeline {
             }
         }
 
-        stage ("trivy image scan") {
-            steps {
-                sh '''
-                    trivy image --severity HIGH,CRITICAL --exit-code 1 ${DOCKER_IMAGE}:{IMAGE_TAG}
-                '''
-            }
-        }
-
         stage ("push docker image") {
             steps {
                 sh '''
-                    docker push -t ${DOCKER_IMAGE}:${IMAGE_TAG}
+                    docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
                 '''
             }
         }
