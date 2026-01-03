@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage ("checkout"){
             steps {
-                git branch: 'main', url: ''
+                git branch: 'master', url: 'https://github.com/Pranay0189/notes-app.git'
             }
         }
 
